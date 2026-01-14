@@ -4,14 +4,31 @@
 ### structs
 ``` ``` 
 ### singly linked list
-``` ```
+```
+typedef struct temp_ll { // singly linked list
+    struct temp_ll next;
+    char *name;
+} linked_list;
+```
 ### doubly linked list
-``` ```
+```
+typedef struct temp_dll { // doubly linked list
+    struct temp_dll previous;
+    struct temp_dll next;
+    char *name;
+    int value;
+} doubly_linked_list;
+```
 ### Trie (prefix tree)
 - a trie is a structure that can store values, words, etc, shaped as a tree:
     - example: storing all the names in a class; instesad of a linked list with each node representing a student, use a trie that maps out all possible combinations of letters to represent the names.
 
-``` ```
+```
+typedef struct temp_trie { // trie; example is alphabetically made
+    struct temp_trie *letters[]; // this holds the entire alphabet. this does NOT denote which letter this is; rather, what demonstrates which letter it is is based on where it was originally referenced in memory (previous letter's array slot)
+    boolean end; // denote whether or not the path we have gone down is a valid path.
+} trie;
+```
 
 ### hash table
 - Hashes can be formatted in a multitude of ways:
@@ -95,17 +112,67 @@ string fileName = "file.txt";
 // 2. Open file
 FILE *file = fopen(fileName, "r");
 
-
 // Reading
+    // More info below.
 
 // Close
+fclose(file)
 ``` 
+
+There are two (main) ways to read files:
+<br><br>
+**fread**
+- read RAW DATA, stopping at the specified data size
+- Used for:
+    - Reading image (bitmap) files
+```
+size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream); 
+```
+- ptr: buffer memory block to store data
+- size: SPECIFIED size for each element to be read (BYTE size)
+- nmemb: NUMBER of elements (of specified size) to read
+- stream: file, terminal input (stdin)
+
+<br>**fgets**
+- read LINES of TEXT, stopping at \n
+- Used for:
+    - .txt
+    - .csv
+```
+char *fgets(char *s, int n, FILE *stream);
+```
+- s: pointer that is made, buffer for where data is stored. 
+- n: maximum char number to read
+- stream: file, terminal input (stdin)
+
 ### Images
+- Image (bitmaps) are formatted as such:
+    - HEADER: 54 bytes
+        - file header (): 14 bytes
+        - image-specific information header (): 40 bytes 
+    
+    - DIMENSIONS
+        - Padding is determined by if pixels are in a multiple of 4. If not, they will be padded.
+        - Colors are encoded in BGR.
 
 ### .WAV Files
 
 
 # Coding Principles
-Endian
-- Big Endian: 
-- Little Endian
+### Endian
+- Big Endian: where the most significant byte is stored at the lowest memory address. Big end first.
+    - example: 365 in binary in Big Endian is:
+    <br>
+    ```0000 0001 0110 1101```
+- Little Endian: where the least significant byte is stored at the lowest memory address. Little end first.
+    - example: 365 in binary in Little Endian is:
+    <br>
+    ```1011 0110 1000 0000```
+
+### Unsigned/Signed Data Types
+- Unsigned: can only be positive, doubling upper limit of values that can be stored
+- Signed: can be either positive or negative
+    - The most significant bit indicates the sign of the number (0 = pos, 1 = neg)
+    ```01111111 = +127```
+    <br>
+    ```10000000 = -128```
