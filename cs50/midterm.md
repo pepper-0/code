@@ -153,10 +153,53 @@ char *fgets(char *s, int n, FILE *stream);
     
     - DIMENSIONS
         - Padding is determined by if pixels are in a multiple of 4. If not, they will be padded.
+            - 3 bytes * 3 pixels = 9 bytes, meaning 3 padding bytes are added.
+            - 3 bytes * 12 pixels = 36 bytes, meaning no padding added.
         - Colors are encoded in BGR.
+        - Width: encoded as a positive number in hexidecimal
+        <br>
+        ``` width of 0000001a = 26 pixels wide```
+        - Height: can be encoded as either positive or negative.
+            - negative: "top-down" image, meaning the first row of file = first row of at top of image
+            <br>
+            ``` height of ffffffe0 = 15 pixels tall```
+            - positive: "bottom-up" image, meaning the first row of file = bottommost row of image
+
+    - IMAGE INFORMATION
+        - 24 bits/pixel; 1 byte per color, encoded in B,G,R order.
+            
 
 ### .WAV Files
+- Audio calculations
+    - Bytes needed for 1 second of a song
+    - Samples needed to encode 1 second of song
+    Given a CD-quality audio (44,100 hz sampling rate at 16-bit quality) with 2 channels
 
+    - Hz, 1 cycle per second
+    44,100 samples/second * 16 bits / 8 = 88,200 bytes/second
+    88,200 bytes/second * 2 = 176,400 bytes/second for 2 channels 
+
+
+- HEADER
+    - 44 bytes long
+    - utilizes uint8_t (unsigned 8-bit integer)
+
+```
+// Create an array of bytes to store each line from the WAV header
+uint8_header[HEADER_SIZE]; // given in Volume pset code
+fread(header, HEADER_SIZE, 1, input);
+fwrite(header, HEADER_SIZE, 1, output);
+```
+
+- SAMPLES AND WRITING 
+    - 1 sample is measured in 16-bit integers
+
+```
+// Create a buffer for 1 sample, read, and write it in
+int16_t buffer;
+fread(&buffer, sizeof(int16+t), 1, input); // input is presumably the input file
+fwrite(&buffer, sizeof(int16_t), 1, output);
+```
 
 # Coding Principles
 ### Endian
